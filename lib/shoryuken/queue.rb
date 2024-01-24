@@ -9,7 +9,20 @@ module Shoryuken
     attr_accessor :name, :client, :url
 
     def initialize(client, name_or_url_or_arn)
-      self.client = client
+
+      if name_or_url_or_arn.start_with?('arn:')
+
+        role_credentials = Aws::AssumeRoleCredentials.new(
+          client: Aws::STS::Client.new,
+          role_arn: Shoryuken.options[:role_arn],
+          role_session_name: "ai-console-sqs-#{Time.now.to_i}"
+        )
+
+        self.client = Aws::SQS::Client.new(credentials: role_credentials)
+      else
+        self.client = client
+      end
+
       set_name_and_url(name_or_url_or_arn)
     end
 

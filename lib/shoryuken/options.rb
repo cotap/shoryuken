@@ -6,6 +6,7 @@ module Shoryuken
       aws: {},
       delay: 0.0,
       timeout: 8,
+      role_arn: nil,
       lifecycle_events: {
         startup: [],
         dispatch: [],
